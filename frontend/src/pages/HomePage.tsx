@@ -8,6 +8,7 @@ import StandingsTable from '../components/matches/StandingsTable'
 import SectionHeader from '../components/ui/SectionHeader'
 import LoadingSpinner from '../components/ui/LoadingSpinner'
 import Card from '../components/ui/Card'
+import { announcementsApi } from '../services/api'
 
 export default function HomePage() {
   const navigate = useNavigate()
@@ -17,6 +18,7 @@ export default function HomePage() {
   const [news, setNews] = useState<NewsPost[]>([])
   const [scorers, setScorers] = useState<Player[]>([])
   const [loading, setLoading] = useState(true)
+  const [announcements, setAnnouncements] = useState<NewsPost[]>([])
 
   useEffect(() => {
     Promise.all([
@@ -25,13 +27,15 @@ export default function HomePage() {
       matchesApi.getStandings(),
       newsApi.getAll(),
       playersApi.getTopScorers(),
-    ]).then(([live, upcomingData, standingsData, newsData, scorersData]) => {
+      announcementsApi.getAll(),
+    ]).then(([live, upcomingData, standingsData, newsData, scorersData, announcementsData]) => {
       setLiveMatches(live)
       setUpcoming(upcomingData.results?.slice(0, 3) || [])
       setStandings(standingsData)
       setNews(newsData.results?.slice(0, 3) || [])
       setScorers(scorersData.slice(0, 5))
       setLoading(false)
+      setAnnouncements(announcementsData.results?.slice(0, 3) || [])
     }).catch(() => setLoading(false))
   }, [])
 
@@ -108,6 +112,24 @@ export default function HomePage() {
           </div>
         </div>
       </div>
+
+      {/* ANNOUNCEMENTS BANNER */}
+{announcements.length > 0 && (
+  <div className="bg-gold/10 border-y border-gold/20 py-4">
+    <div className="max-w-7xl mx-auto px-4 space-y-2">
+      {announcements.map((a) => (
+        <div key={a.id} className="flex items-center gap-3">
+          <span className="text-gold text-lg flex-shrink-0">📢</span>
+          <span className="font-semibold text-gold text-sm">{a.title}</span>
+          <span className="text-gray-400 text-sm hidden md:block">— {a.excerpt}</span>
+          <span className="text-gray-600 text-xs ml-auto flex-shrink-0">
+            {new Date(a.created_at).toLocaleDateString('en-GB')}
+          </span>
+        </div>
+      ))}
+    </div>
+  </div>
+)}
 
       {/* STANDINGS PREVIEW */}
       <div className="bg-surface-raised py-12">

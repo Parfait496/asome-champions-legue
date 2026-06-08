@@ -43,4 +43,9 @@ export const authApi = {
     api.post('/auth/token/', { username, password }).then((r) => r.data),
 }
 
+export const announcementsApi = {
+  getAll: () =>
+    api.get<{ results: NewsPost[]; count: number }>('/news/?tag=announcement').then((r) => r.data),
+}
+
 export default api

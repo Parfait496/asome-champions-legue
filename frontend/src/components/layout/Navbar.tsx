@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useAuth } from '../../context/AuthContext'
 
 const links = [
   { to: '/', label: 'Home' },
@@ -11,6 +12,8 @@ const links = [
 
 export default function Navbar() {
   const { pathname } = useLocation()
+  const { isAuthenticated, user, logout } = useAuth()
+  const navigate = useNavigate()
   const [open, setOpen] = useState(false)
 
   return (
@@ -44,6 +47,30 @@ export default function Navbar() {
           ))}
         </div>
 
+        {/* Auth button */}
+        <div className="hidden md:flex items-center gap-3">
+          {isAuthenticated ? (
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-gray-400">
+                👋 {user?.username}
+              </span>
+              <button
+                onClick={logout}
+                className="px-4 py-2 text-sm font-medium text-gray-400 border border-border rounded-lg hover:border-red-500/50 hover:text-red-400 transition-all"
+              >
+                Sign Out
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => navigate('/login')}
+              className="px-4 py-2 bg-gold text-dark text-sm font-bold rounded-lg hover:bg-gold-dark transition-all duration-200"
+            >
+              Sign In
+            </button>
+          )}
+        </div>
+
         {/* Mobile menu button */}
         <button
           className="md:hidden text-gray-400 hover:text-white"
@@ -72,7 +99,22 @@ export default function Navbar() {
               {l.label}
             </Link>
           ))}
-          
+          {isAuthenticated ? (
+            <button
+              onClick={() => { logout(); setOpen(false) }}
+              className="mt-2 px-4 py-2.5 border border-red-500/30 text-red-400 text-sm font-medium rounded-lg text-center"
+            >
+              Sign Out
+            </button>
+          ) : (
+            <Link
+              to="/login"
+              onClick={() => setOpen(false)}
+              className="mt-2 px-4 py-2.5 bg-gold text-dark text-sm font-bold rounded-lg text-center"
+            >
+              Sign In
+            </Link>
+          )}
         </div>
       )}
     </nav>

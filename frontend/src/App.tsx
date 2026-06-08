@@ -9,6 +9,7 @@ import TeamsPage from './pages/TeamsPage'
 import NewsPage from './pages/NewsPage'
 import GalleryPage from './pages/GalleryPage'
 import AdminPage from './pages/AdminPage'
+import LoginPage from './pages/LoginPage'
 
 export default function App() {
   return (
@@ -25,6 +26,7 @@ export default function App() {
               <Route path="/news" element={<NewsPage />} />
               <Route path="/gallery" element={<GalleryPage />} />
               <Route path="/admin-panel" element={<AdminPage />} />
+              <Route path="/login" element={<LoginPage />} />
             </Routes>
           </main>
           <Footer />
