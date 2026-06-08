@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+staticfiles/
+media/
+db.sqlite3
+
+# Django
+backend/.env
+backend/media/
+backend/staticfiles/
+
+# Node
+node_modules/
+frontend/dist/
+frontend/.env
+
+# Docker
+.dockerignore
+
+# OS
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/

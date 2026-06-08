@@ -1,0 +1,210 @@
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { matchesApi, newsApi, playersApi } from '../services/api'
+import type { Match, StandingsEntry, NewsPost, Player } from '../types'
+import LiveMatchCard from '../components/home/LiveMatchCard'
+import FixtureCard from '../components/matches/FixtureCard'
+import StandingsTable from '../components/matches/StandingsTable'
+import SectionHeader from '../components/ui/SectionHeader'
+import LoadingSpinner from '../components/ui/LoadingSpinner'
+import Card from '../components/ui/Card'
+
+export default function HomePage() {
+  const navigate = useNavigate()
+  const [liveMatches, setLiveMatches] = useState<Match[]>([])
+  const [upcoming, setUpcoming] = useState<Match[]>([])
+  const [standings, setStandings] = useState<StandingsEntry[]>([])
+  const [news, setNews] = useState<NewsPost[]>([])
+  const [scorers, setScorers] = useState<Player[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    Promise.all([
+      matchesApi.getLive(),
+      matchesApi.getAll({ status: 'scheduled' }),
+      matchesApi.getStandings(),
+      newsApi.getAll(),
+      playersApi.getTopScorers(),
+    ]).then(([live, upcomingData, standingsData, newsData, scorersData]) => {
+      setLiveMatches(live)
+      setUpcoming(upcomingData.results?.slice(0, 3) || [])
+      setStandings(standingsData)
+      setNews(newsData.results?.slice(0, 3) || [])
+      setScorers(scorersData.slice(0, 5))
+      setLoading(false)
+    }).catch(() => setLoading(false))
+  }, [])
+
+  if (loading) return <LoadingSpinner text="Loading tournament data..." />
+
+  return (
+    <div>
+      {/* HERO */}
+      <div className="relative bg-pitch overflow-hidden">
+        {/* Pitch lines background */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `
+              radial-gradient(ellipse 60% 40% at 50% 50%, transparent 58%, #4CAF50 59%, transparent 61%),
+              linear-gradient(90deg, transparent 49.5%, #4CAF50 49.5%, #4CAF50 50.5%, transparent 50.5%)
+            `
+          }} />
+        </div>
+        {/* Gold glow */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-gold/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="relative max-w-7xl mx-auto px-4 py-16 md:py-24">
+          <div className="flex flex-col md:flex-row items-center gap-12">
+            {/* Left content */}
+            <div className="flex-1">
+              <div className="inline-flex items-center gap-2 bg-gold/15 border border-gold/30 text-gold px-3 py-1.5 rounded-full text-xs font-semibold tracking-widest uppercase mb-6">
+                <span className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse" />
+                Season 2025 · Campus Cup
+              </div>
+              <h1 className="font-display text-6xl md:text-8xl leading-none tracking-wide mb-4">
+                ASOME<br />
+                <span className="text-gold">Champions</span><br />
+                League
+              </h1>
+              <p className="text-gray-400 text-lg mb-8 max-w-md leading-relaxed">
+                The ultimate campus football tournament. 6 year groups. 12 teams. One champion.
+              </p>
+              <div className="flex gap-3 flex-wrap">
+                <button
+                  onClick={() => navigate('/matches')}
+                  className="px-6 py-3 bg-gold text-dark font-bold rounded-lg hover:bg-gold-dark transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-gold/20"
+                >
+                  View Fixtures
+                </button>
+                <button
+                  onClick={() => navigate('/teams')}
+                  className="px-6 py-3 bg-transparent text-white border border-border rounded-lg font-semibold hover:border-gray-500 hover:bg-surface transition-all duration-200"
+                >
+                  Meet The Teams
+                </button>
+              </div>
+              {/* Stats */}
+              <div className="flex gap-8 mt-10">
+                {[
+                  { val: '12', label: 'Teams' },
+                  { val: '48', label: 'Matches' },
+                  { val: '320+', label: 'Students' },
+                  { val: '6', label: 'Year Groups' },
+                ].map((s) => (
+                  <div key={s.label}>
+                    <div className="font-display text-3xl text-gold">{s.val}</div>
+                    <div className="text-xs text-gray-500 uppercase tracking-wider">{s.label}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Live match card */}
+            {liveMatches.length > 0 && (
+              <div className="flex-shrink-0">
+                <LiveMatchCard match={liveMatches[0]} />
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* STANDINGS PREVIEW */}
+      <div className="bg-surface-raised py-12">
+        <div className="max-w-7xl mx-auto px-4">
+          <SectionHeader
+            title="League"
+            highlight="Standings"
+            action={{ label: 'Full table', onClick: () => navigate('/matches') }}
+          />
+          <div className="bg-surface border border-border rounded-xl overflow-hidden">
+            <StandingsTable data={standings.slice(0, 6)} />
+          </div>
+        </div>
+      </div>
+
+      {/* UPCOMING FIXTURES */}
+      <div className="py-12">
+        <div className="max-w-7xl mx-auto px-4">
+          <SectionHeader
+            title="Upcoming"
+            highlight="Fixtures"
+            action={{ label: 'All matches', onClick: () => navigate('/matches') }}
+          />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {upcoming.map((m) => <FixtureCard key={m.id} match={m} />)}
+            {upcoming.length === 0 && (
+              <p className="text-gray-500 col-span-3 text-center py-8">No upcoming matches scheduled.</p>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* TOP SCORERS + NEWS */}
+      <div className="bg-surface-raised py-12">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            {/* Top Scorers */}
+            <div>
+              <SectionHeader title="Top" highlight="Scorers" />
+              <div className="space-y-3">
+                {scorers.map((p, i) => (
+                  <Card key={p.id} hover className="p-3">
+                    <div className="flex items-center gap-3">
+                      <div className={`font-display text-2xl min-w-[28px] text-center ${i === 0 ? 'text-gold' : 'text-gray-500'}`}>
+                        {i + 1}
+                      </div>
+                      <div
+                        className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0"
+                        style={{ background: '#0D2E4B' }}
+                      >
+                        {p.name.split(' ').map((n) => n[0]).join('').slice(0, 2)}
+                      </div>
+                      <div className="flex-1">
+                        <div className="text-sm font-semibold">{p.name}</div>
+                        <div className="text-xs text-gray-500">{p.position}</div>
+                      </div>
+                      <div className="text-right">
+                        <div className="font-display text-2xl text-gold">{p.goals}</div>
+                        <div className="text-xs text-gray-500">goals</div>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </div>
+
+            {/* Latest News */}
+            <div>
+              <SectionHeader
+                title="Latest"
+                highlight="News"
+                action={{ label: 'All news', onClick: () => navigate('/news') }}
+              />
+              <div className="space-y-3">
+                {news.map((post) => (
+                  <Card key={post.id} hover className="flex gap-3 p-3">
+                    <div
+                      className="w-12 h-12 rounded-lg flex items-center justify-center text-2xl flex-shrink-0"
+                      style={{ background: post.bg_color }}
+                    >
+                      {post.emoji}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-semibold leading-snug line-clamp-2">{post.title}</div>
+                      <div className="text-xs text-gray-500 mt-1">
+                        {new Date(post.created_at).toLocaleDateString('en-GB', {
+                          day: 'numeric', month: 'short',
+                        })}
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}

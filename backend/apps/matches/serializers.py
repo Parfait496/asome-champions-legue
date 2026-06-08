@@ -1,0 +1,39 @@
+from rest_framework import serializers
+from .models import Match, MatchEvent
+from apps.teams.models import Team
+from apps.teams.serializers import TeamListSerializer
+
+
+class MatchEventSerializer(serializers.ModelSerializer):
+    player_name = serializers.CharField(source='player.name', read_only=True)
+    team_name = serializers.CharField(source='player.team.name', read_only=True)
+
+    class Meta:
+        model = MatchEvent
+        fields = ['id', 'player_name', 'team_name', 'event_type', 'minute', 'notes']
+
+
+class MatchSerializer(serializers.ModelSerializer):
+    home_team = TeamListSerializer(read_only=True)
+    away_team = TeamListSerializer(read_only=True)
+    home_team_id = serializers.PrimaryKeyRelatedField(
+        queryset=Team.objects.all(),
+        source='home_team',
+        write_only=True
+    )
+    away_team_id = serializers.PrimaryKeyRelatedField(
+        queryset=Team.objects.all(),
+        source='away_team',
+        write_only=True
+    )
+    events = MatchEventSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Match
+        fields = [
+            'id', 'home_team', 'away_team',
+            'home_team_id', 'away_team_id',
+            'home_score', 'away_score',
+            'match_date', 'matchday', 'venue',
+            'status', 'minute', 'events',
+        ]
