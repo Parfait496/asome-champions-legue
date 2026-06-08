@@ -54,13 +54,13 @@ export default function Footer() {
 
           {/* Designed by */}
           <div className="text-xs text-gray-600 flex items-center gap-1.5">
-            Designed & Developed by{' '}
-            
+            Developed by{' '}
+            <a
               href="https://www.linkedin.com/in/ndizihiwe-parfait-250884283"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gold hover:text-gold-dark transition-colors font-medium"
-            <a>
+            >
               Ndizihiwe Parfait
             </a>
           </div>
