@@ -17,53 +17,61 @@ class Team(models.Model):
     def __str__(self):
         return f"{self.name} (Year {self.year_group})"
 
-@property
-def stats(self):
-    home_done = self.home_matches.filter(status='done')
-    away_done = self.away_matches.filter(status='done')
-    wins = draws = losses = gf = ga = 0
+    @property
+    def stats(self):
+        home_done = self.home_matches.filter(status='done')
+        away_done = self.away_matches.filter(status='done')
+        wins = draws = losses = gf = ga = 0
 
-    for m in home_done:
-        gf += m.home_score
-        ga += m.away_score
-        if m.home_score > m.away_score:
-            wins += 1
-        elif m.home_score == m.away_score:
-            if m.penalty_winner_id == self.id:
-                wins += 1
-            elif m.penalty_winner_id is not None:
-                losses += 1
-            else:
-                draws += 1
-        else:
-            losses += 1
+        for m in home_done:
+            try:
+                gf += m.home_score
+                ga += m.away_score
+                if m.home_score > m.away_score:
+                    wins += 1
+                elif m.home_score == m.away_score:
+                    penalty_winner_id = getattr(m, 'penalty_winner_id', None)
+                    if penalty_winner_id == self.id:
+                        wins += 1
+                    elif penalty_winner_id is not None:
+                        losses += 1
+                    else:
+                        draws += 1
+                else:
+                    losses += 1
+            except Exception:
+                continue
 
-    for m in away_done:
-        gf += m.away_score
-        ga += m.home_score
-        if m.away_score > m.home_score:
-            wins += 1
-        elif m.away_score == m.home_score:
-            if m.penalty_winner_id == self.id:
-                wins += 1
-            elif m.penalty_winner_id is not None:
-                losses += 1
-            else:
-                draws += 1
-        else:
-            losses += 1
+        for m in away_done:
+            try:
+                gf += m.away_score
+                ga += m.home_score
+                if m.away_score > m.home_score:
+                    wins += 1
+                elif m.away_score == m.home_score:
+                    penalty_winner_id = getattr(m, 'penalty_winner_id', None)
+                    if penalty_winner_id == self.id:
+                        wins += 1
+                    elif penalty_winner_id is not None:
+                        losses += 1
+                    else:
+                        draws += 1
+                else:
+                    losses += 1
+            except Exception:
+                continue
 
-    played = wins + draws + losses
-    return {
-        'played': played,
-        'wins': wins,
-        'draws': draws,
-        'losses': losses,
-        'gf': gf,
-        'ga': ga,
-        'gd': gf - ga,
-        'points': wins * 3 + draws,
-    }
+        played = wins + draws + losses
+        return {
+            'played': played,
+            'wins': wins,
+            'draws': draws,
+            'losses': losses,
+            'gf': gf,
+            'ga': ga,
+            'gd': gf - ga,
+            'points': wins * 3 + draws,
+        }
 
 
 class Player(models.Model):

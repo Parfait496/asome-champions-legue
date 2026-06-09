@@ -24,14 +24,20 @@ class MatchViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def standings(self, request):
+        from apps.teams.models import Team
+        from apps.teams.serializers import TeamListSerializer
         teams = Team.objects.prefetch_related(
-            'home_matches', 'away_matches'
+            'home_matches__penalty_winner',
+            'away_matches__penalty_winner',
         )
         data = []
         for team in teams:
-            entry = {'team': TeamListSerializer(team).data}
-            entry.update(team.stats)
-            data.append(entry)
+            try:
+                entry = {'team': TeamListSerializer(team).data}
+                entry.update(team.stats)
+                data.append(entry)
+            except Exception:
+                continue
         data.sort(key=lambda x: (-x['points'], -x['gd'], -x['gf']))
         return Response(data)
 
