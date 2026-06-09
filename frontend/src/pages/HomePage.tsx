@@ -71,7 +71,7 @@ export default function HomePage() {
                 League
               </h1>
               <p className="text-gray-400 text-lg mb-8 max-w-md leading-relaxed">
-                The ultimate campus football tournament. 6 year groups. 12 teams. One champion.
+                The ultimate campus football tournament. 6 year groups. 6 teams. One champion.
               </p>
               <div className="flex gap-3 flex-wrap">
                 <button
@@ -90,9 +90,9 @@ export default function HomePage() {
               {/* Stats */}
               <div className="flex gap-8 mt-10">
                 {[
-                  { val: '12', label: 'Teams' },
-                  { val: '48', label: 'Matches' },
-                  { val: '320+', label: 'Students' },
+                  { val: '6', label: 'Teams' },
+                  { val: '5+', label: 'Matches' },
+                  { val: '250+', label: 'Students' },
                   { val: '6', label: 'Year Groups' },
                 ].map((s) => (
                   <div key={s.label}>

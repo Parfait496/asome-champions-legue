@@ -93,24 +93,31 @@ function LoginScreen() {
 // ── DASHBOARD ──────────────────────────────────────────
 function Dashboard() {
   const [stats, setStats] = useState({ matches: 0, news: 0, teams: 0 })
+  const [scorers, setScorers] = useState<any[]>([])
 
   useEffect(() => {
     Promise.all([
       matchesApi.getAll(),
       newsApi.getAll(),
       teamsApi.getAll(),
-    ]).then(([m, n, t]) => {
+      fetch(`${import.meta.env.VITE_API_URL}/matches/top_scorers/`)
+        .then((r) => r.json())
+        .then((d) => Array.isArray(d) ? d : d.results || []),
+    ]).then(([m, n, t, s]) => {
       setStats({
         matches: m.count || 0,
         news: n.count || 0,
         teams: t.length || 0,
       })
+      setScorers(s.slice(0, 5))
     })
   }, [])
 
   return (
     <div>
       <h2 className="font-display text-2xl tracking-wide mb-6">Dashboard</h2>
+
+      {/* Stats cards */}
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
         {[
           { icon: '⚽', val: stats.matches, label: 'Total Matches' },
@@ -124,6 +131,50 @@ function Dashboard() {
           </Card>
         ))}
       </div>
+
+      {/* Top Scorers */}
+      <Card className="p-5 mb-6">
+        <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-4">
+          🥇 Top Scorers
+        </h3>
+        {scorers.length === 0 ? (
+          <p className="text-gray-500 text-sm">No goals recorded yet.</p>
+        ) : (
+          <div className="space-y-3">
+            {scorers.map((p, i) => (
+              <div key={p.id} className="flex items-center gap-3">
+                <div className={`font-display text-xl min-w-[24px] text-center ${
+                  i === 0 ? 'text-gold' : 'text-gray-500'
+                }`}>
+                  {i + 1}
+                </div>
+                <div
+                  className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
+                  style={{ background: '#0D2E4B' }}
+                >
+                  {p.name.split(' ').map((n: string) => n[0]).join('').slice(0, 2)}
+                </div>
+                <div className="flex-1">
+                  <div className="text-sm font-semibold">{p.name}</div>
+                  <div className="text-xs text-gray-500">{p.position}</div>
+                </div>
+                <div className="flex items-center gap-3 text-right">
+                  <div>
+                    <div className="font-display text-xl text-gold">{p.goals}</div>
+                    <div className="text-xs text-gray-500">goals</div>
+                  </div>
+                  <div>
+                    <div className="font-display text-xl text-gray-400">{p.assists}</div>
+                    <div className="text-xs text-gray-500">assists</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </Card>
+
+      {/* Quick tips */}
       <Card className="p-5">
         <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-3">
           Quick Tips
@@ -132,7 +183,7 @@ function Dashboard() {
           <li>→ Use <span className="text-gold">Matches</span> tab to add or update match results</li>
           <li>→ Use <span className="text-gold">News</span> tab to publish match reports and articles</li>
           <li>→ Use <span className="text-gold">Announcements</span> tab to post important notices</li>
-          <li>→ Full database management at <span className="text-gold">/admin/</span> on the backend</li>
+          <li>→ Full database management at your Railway URL <span className="text-gold">/admin/</span></li>
         </ul>
       </Card>
     </div>
