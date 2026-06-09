@@ -63,7 +63,7 @@ export default function HomePage() {
             <div className="flex-1">
               <div className="inline-flex items-center gap-2 bg-gold/15 border border-gold/30 text-gold px-3 py-1.5 rounded-full text-xs font-semibold tracking-widest uppercase mb-6">
                 <span className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse" />
-                Season 2025 · Campus Cup
+                Season 2026 · ASOME Campus Cup
               </div>
               <h1 className="font-display text-6xl md:text-8xl leading-none tracking-wide mb-4">
                 ASOME<br />
