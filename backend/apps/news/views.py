@@ -1,7 +1,7 @@
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from .models import NewsPost
-from .serializers import NewsPostSerializer
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
+from .models import NewsPost, Submission
+from .serializers import NewsPostSerializer, SubmissionSerializer
 
 
 class NewsPostViewSet(viewsets.ModelViewSet):
@@ -13,3 +13,13 @@ class NewsPostViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+
+class SubmissionViewSet(viewsets.ModelViewSet):
+    queryset = Submission.objects.all()
+    serializer_class = SubmissionSerializer
+
+    def get_permissions(self):
+        if self.action == 'create':
+            return [AllowAny()]
+        return [IsAuthenticatedOrReadOnly()]

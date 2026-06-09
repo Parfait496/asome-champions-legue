@@ -14,3 +14,11 @@ class NewsPostSerializer(serializers.ModelSerializer):
             'emoji', 'bg_color', 'author_name',
             'is_published', 'created_at',
         ]
+
+from .models import NewsPost, Submission
+
+class SubmissionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Submission
+        fields = ['id', 'submission_type', 'name', 'email',
+                  'subject', 'message', 'created_at']

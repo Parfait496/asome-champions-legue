@@ -17,15 +17,19 @@ class MatchSerializer(serializers.ModelSerializer):
     home_team = TeamListSerializer(read_only=True)
     away_team = TeamListSerializer(read_only=True)
     home_team_id = serializers.PrimaryKeyRelatedField(
-        queryset=Team.objects.all(),
-        source='home_team',
-        write_only=True
+        queryset=Team.objects.all(), source='home_team', write_only=True
     )
     away_team_id = serializers.PrimaryKeyRelatedField(
-        queryset=Team.objects.all(),
-        source='away_team',
-        write_only=True
+        queryset=Team.objects.all(), source='away_team', write_only=True
     )
+    penalty_winner_id = serializers.PrimaryKeyRelatedField(
+        queryset=Team.objects.all(),
+        source='penalty_winner',
+        write_only=True,
+        required=False,
+        allow_null=True
+    )
+    penalty_winner = TeamListSerializer(read_only=True)
     events = MatchEventSerializer(many=True, read_only=True)
 
     class Meta:
@@ -35,5 +39,7 @@ class MatchSerializer(serializers.ModelSerializer):
             'home_team_id', 'away_team_id',
             'home_score', 'away_score',
             'match_date', 'matchday', 'venue',
-            'status', 'minute', 'events',
+            'status', 'minute',
+            'penalty_winner', 'penalty_winner_id',
+            'events',
         ]

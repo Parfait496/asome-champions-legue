@@ -25,6 +25,12 @@ class Match(models.Model):
         max_length=15, choices=STATUS_CHOICES, default='scheduled'
     )
     minute = models.IntegerField(null=True, blank=True)
+    penalty_winner = models.ForeignKey(
+        Team,
+        related_name='penalty_wins',
+        on_delete=models.SET_NULL,
+        null=True, blank=True
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

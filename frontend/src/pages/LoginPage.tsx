@@ -85,7 +85,7 @@ export default function LoginPage() {
         </form>
 
         <p className="text-center text-xs text-gray-600 mt-6">
-          No account? Contact the administrator to get access.
+          No account? Relax 😂🫵 you are not allowed or Contact the admin to get access.
         </p>
       </Card>
     </div>

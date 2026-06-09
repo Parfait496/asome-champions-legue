@@ -71,7 +71,7 @@ export default function HomePage() {
                 League
               </h1>
               <p className="text-gray-400 text-lg mb-8 max-w-md leading-relaxed">
-                The ultimate campus football tournament. 6 year groups. 6 teams. One champion.
+                The ultimate campus football tournament. 6 teams. One champion.
               </p>
               <div className="flex gap-3 flex-wrap">
                 <button

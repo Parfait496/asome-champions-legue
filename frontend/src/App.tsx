@@ -10,6 +10,7 @@ import NewsPage from './pages/NewsPage'
 import GalleryPage from './pages/GalleryPage'
 import AdminPage from './pages/AdminPage'
 import LoginPage from './pages/LoginPage'
+import SubmitPage from './pages/SubmitPage'
 
 export default function App() {
   return (
@@ -29,6 +30,7 @@ export default function App() {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/panel" element={<AdminPage />} />
               <Route path="/x7k9-admin" element={<AdminPage />} />
+              <Route path="/submit" element={<SubmitPage />} />
             </Routes>
           </main>
           <Footer />

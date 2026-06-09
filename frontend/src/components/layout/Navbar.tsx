@@ -8,6 +8,7 @@ const links = [
   { to: '/teams', label: 'Teams' },
   { to: '/news', label: 'News' },
   { to: '/gallery', label: 'Gallery' },
+  { to: '/submit', label: 'Feedback' },
 ]
 
 export default function Navbar() {

@@ -87,7 +87,7 @@ export default function GalleryPage() {
           <div className="text-5xl mb-4">📸</div>
           <p className="text-gray-500 text-sm">No media uploaded yet.</p>
           <p className="text-gray-600 text-xs mt-1">
-            Upload photos and videos through the admin panel.
+            Waiting for photos and videos.
           </p>
         </div>
       )}

@@ -29,3 +29,23 @@ class NewsPost(models.Model):
 
     def __str__(self):
         return self.title
+    
+
+class Submission(models.Model):
+    TYPE_CHOICES = [
+        ('suggestion', 'Suggestion'),
+        ('claim', 'Claim'),
+    ]
+    submission_type = models.CharField(max_length=20, choices=TYPE_CHOICES)
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    subject = models.CharField(max_length=200)
+    message = models.TextField()
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.submission_type} — {self.name} ({self.subject})"

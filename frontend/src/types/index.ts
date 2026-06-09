@@ -54,6 +54,7 @@ export interface Match {
   venue: string
   status: 'scheduled' | 'live' | 'done' | 'postponed'
   minute?: number
+  penalty_winner?: Team
   events: MatchEvent[]
 }
 
@@ -70,5 +71,15 @@ export interface NewsPost {
   emoji: string
   bg_color: string
   author_name: string
+  created_at: string
+}
+
+export interface Submission {
+  id: number
+  submission_type: 'suggestion' | 'claim'
+  name: string
+  email: string
+  subject: string
+  message: string
   created_at: string
 }
