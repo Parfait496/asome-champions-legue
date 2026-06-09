@@ -18,7 +18,16 @@
     <script>
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.getRegistrations().then((registrations) => {
-          registrations.forEach((r) => r.unregister())
+          registrations.forEach((r) => {
+            r.unregister()
+            console.log('Service worker unregistered')
+          })
+        })
+        caches.keys().then((keys) => {
+          keys.forEach((key) => {
+            caches.delete(key)
+            console.log('Cache cleared:', key)
+          })
         })
       }
     </script>
