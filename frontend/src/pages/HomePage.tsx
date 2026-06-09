@@ -33,7 +33,7 @@ export default function HomePage() {
       setUpcoming(upcomingData.results?.slice(0, 3) || [])
       setStandings(standingsData)
       setNews(newsData.results?.slice(0, 3) || [])
-      setScorers(scorersData.slice(0, 10))
+      setScorers(scorersData.slice(0, 6))
       setLoading(false)
       setAnnouncements(announcementsData.results?.slice(0, 3) || [])
     }).catch(() => setLoading(false))

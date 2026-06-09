@@ -12,7 +12,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
 
   if (isAuthenticated) {
-    navigate('/')
+    navigate('/panel')
     return null
   }
 

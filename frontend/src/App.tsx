@@ -27,6 +27,7 @@ export default function App() {
               <Route path="/gallery" element={<GalleryPage />} />
               <Route path="/admin-panel" element={<AdminPage />} />
               <Route path="/login" element={<LoginPage />} />
+              <Route path="/panel" element={<AdminPage />} />
               <Route path="/x7k9-admin" element={<AdminPage />} />
             </Routes>
           </main>
