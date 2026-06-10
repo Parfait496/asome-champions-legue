@@ -114,12 +114,19 @@ export default function TeamDetailPage() {
               {players.map((player) => (
                 <Card key={player.id} className="p-4 text-center">
                   {/* Avatar */}
-                  <div
-                    className="w-12 h-12 rounded-full mx-auto mb-3 flex items-center justify-center text-sm font-bold"
-                    style={{ background: team.bg_color, border: `2px solid ${team.color}40` }}
-                  >
-                    {player.name.split(' ').map((n) => n[0]).join('').slice(0, 2)}
-                  </div>
+                <div className="w-12 h-12 rounded-full mx-auto mb-3 overflow-hidden border-2 flex items-center justify-center text-sm font-bold"
+                  style={{ background: team.bg_color, borderColor: team.color + '40' }}
+                >
+                  {player.photo ? (
+                    <img
+                      src={player.photo}
+                      alt={player.name}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    player.name.split(' ').map((n) => n[0]).join('').slice(0, 2)
+                  )}
+                </div>
 
                   {/* Captain badge */}
                   {player.is_captain && (

@@ -71,6 +71,7 @@ export interface NewsPost {
   emoji: string
   bg_color: string
   author_name: string
+  author_title: string
   created_at: string
 }
 

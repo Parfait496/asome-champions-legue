@@ -36,10 +36,10 @@ function AnnouncementCard({ post, onClick }: { post: NewsPost; onClick: () => vo
         <p className="text-amber-800 text-sm leading-relaxed mb-4">{post.excerpt}</p>
         <div className="border-t border-amber-200 pt-3 flex items-center justify-between">
           <div className="text-xs text-amber-700">
-            <span className="font-semibold">{post.author_name || 'ASOME Administration'}</span>
-            <br />
-            <span className="text-amber-600">Tournament Committee</span>
-          </div>
+  <span className="font-semibold">{post.author_name || 'ASOME Administration'}</span>
+  <br />
+  <span className="text-amber-600">{post.author_title || 'Tournament Committee'}</span>
+</div>
           <div className="text-amber-800 text-lg">{post.emoji}</div>
         </div>
       </div>
@@ -99,8 +99,9 @@ export default function NewsPage() {
               <div className="mt-10 pt-6 border-t border-amber-200">
                 <div className="text-sm text-amber-800">
                   <div className="mb-4 text-amber-600 text-xs italic">Signed,</div>
-                  <div className="font-bold text-amber-900">{selected.author_name || 'Tournament Committee'}</div>
-                  <div className="text-amber-700 text-sm">ASOME Champions League Administration</div>
+                  <div className="font-bold text-amber-900">{selected.author_name || 'Admin'}</div>
+                  <div className="text-amber-700 text-sm">{selected.author_title || 'Tournament Committee'}</div>
+                  <div className="text-amber-600 text-xs">ASOME Champions League</div>
                   <div className="text-amber-600 text-xs mt-1">
                     {new Date(selected.created_at).toLocaleDateString('en-GB', {
                       day: 'numeric', month: 'long', year: 'numeric',

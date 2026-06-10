@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import NewsPost
+from .models import NewsPost, Submission
 
 
 class NewsPostSerializer(serializers.ModelSerializer):
@@ -11,14 +11,15 @@ class NewsPostSerializer(serializers.ModelSerializer):
         model = NewsPost
         fields = [
             'id', 'title', 'tag', 'excerpt', 'content',
-            'emoji', 'bg_color', 'author_name',
+            'emoji', 'bg_color', 'author_name', 'author_title',
             'is_published', 'created_at',
         ]
 
-from .models import NewsPost, Submission
 
 class SubmissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Submission
-        fields = ['id', 'submission_type', 'name', 'email',
-                  'subject', 'message', 'created_at']
+        fields = [
+            'id', 'submission_type', 'name', 'email',
+            'subject', 'message', 'created_at',
+        ]

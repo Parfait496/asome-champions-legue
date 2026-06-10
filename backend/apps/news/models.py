@@ -10,7 +10,6 @@ class NewsPost(models.Model):
         ('stats', 'Stats'),
         ('general', 'General'),
     ]
-
     title = models.CharField(max_length=200)
     tag = models.CharField(max_length=30, choices=TAGS, default='general')
     excerpt = models.TextField(max_length=300)
@@ -19,6 +18,9 @@ class NewsPost(models.Model):
     bg_color = models.CharField(max_length=7, default='#0D2E4B')
     author = models.ForeignKey(
         User, on_delete=models.SET_NULL, null=True, blank=True
+    )
+    author_title = models.CharField(
+        max_length=100, blank=True, default='Tournament Committee'
     )
     is_published = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
