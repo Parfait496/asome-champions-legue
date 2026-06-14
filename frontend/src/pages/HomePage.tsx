@@ -117,8 +117,12 @@ export default function HomePage() {
 {announcements.length > 0 && (
   <div className="bg-gold/10 border-y border-gold/20 py-4">
     <div className="max-w-7xl mx-auto px-4 space-y-2">
-      {announcements.map((a) => (
-        <div key={a.id} className="flex items-center gap-3">
+        {announcements.map((a) => (
+          <div
+            key={a.id}
+            onClick={() => navigate(`/news/${a.id}`)}
+            className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
+          >
           <span className="text-gold text-lg flex-shrink-0">📢</span>
           <span className="font-semibold text-gold text-sm">{a.title}</span>
           <span className="text-gray-400 text-sm hidden md:block">— {a.excerpt}</span>
@@ -204,24 +208,29 @@ export default function HomePage() {
                 action={{ label: 'All news', onClick: () => navigate('/news') }}
               />
               <div className="space-y-3">
-                {news.map((post) => (
-                  <Card key={post.id} hover className="flex gap-3 p-3">
-                    <div
-                      className="w-12 h-12 rounded-lg flex items-center justify-center text-2xl flex-shrink-0"
-                      style={{ background: post.bg_color }}
-                    >
-                      {post.emoji}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm font-semibold leading-snug line-clamp-2">{post.title}</div>
-                      <div className="text-xs text-gray-500 mt-1">
-                        {new Date(post.created_at).toLocaleDateString('en-GB', {
-                          day: 'numeric', month: 'short',
-                        })}
+                  {news.map((post) => (
+                    <Card key={post.id} hover onClick={() => navigate(`/news/${post.id}`)} className="flex gap-3 p-3">
+                      <div
+                        className="w-12 h-12 rounded-lg flex items-center justify-center text-2xl flex-shrink-0 overflow-hidden"
+                        style={{ background: post.bg_color }}
+                      >
+                        {post.cover_image_url
+                          ? <img src={post.cover_image_url} className="w-full h-full object-cover" />
+                          : post.emoji
+                        }
                       </div>
-                    </div>
-                  </Card>
-                ))}
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-semibold leading-snug line-clamp-2 hover:text-gold transition-colors">
+                          {post.title}
+                        </div>
+                        <div className="text-xs text-gray-500 mt-1">
+                          {new Date(post.created_at).toLocaleDateString('en-GB', {
+                            day: 'numeric', month: 'short',
+                          })}
+                        </div>
+                      </div>
+                    </Card>
+                  ))}
               </div>
             </div>
           </div>

@@ -558,6 +558,8 @@ function NewsManager() {
     title: '', tag: 'general', excerpt: '',
     content: '', emoji: '📰', bg_color: '#0D2E4B',
   })
+  const [coverFile, setCoverFile] = useState<File | null>(null)
+  const coverRef = useRef<HTMLInputElement>(null)
 
   const load = () => newsApi.getAll().then((data) => { setPosts(data.results || []); setLoading(false) })
   useEffect(() => { load() }, [])
@@ -581,17 +583,39 @@ function NewsManager() {
     else setMessage('❌ Failed to delete')
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setSaving(true)
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault()
+  setSaving(true)
+  const token = localStorage.getItem('access_token')
+
+  if (coverFile) {
+    // Use FormData when there's a file
+    const formData = new FormData()
+    Object.entries(form).forEach(([k, v]) => formData.append(k, v))
+    formData.append('cover_image', coverFile)
+
+    const url = editing ? `/news/${editing.id}/` : '/news/'
+    const method = editing ? 'PATCH' : 'POST'
+    const res = await fetch(`${import.meta.env.VITE_API_URL}${url}`, {
+      method,
+      headers: { Authorization: `Bearer ${token}` },
+      body: formData,
+    })
+    if (res.ok) {
+      setMessage(editing ? '✅ Article updated' : '✅ Article published')
+      setCoverFile(null); resetForm(); load()
+    } else setMessage('❌ Failed to save')
+  } else {
     const res = editing
       ? await apiCall('PATCH', `/news/${editing.id}/`, form)
       : await apiCall('POST', '/news/', form)
-    if (res.ok) { setMessage(editing ? '✅ Article updated' : '✅ Article published'); resetForm(); load() }
-    else setMessage('❌ Failed to save')
-    setSaving(false)
+    if (res.ok) {
+      setMessage(editing ? '✅ Article updated' : '✅ Article published')
+      resetForm(); load()
+    } else setMessage('❌ Failed to save')
   }
-
+  setSaving(false)
+}
   if (loading) return <LoadingSpinner />
 
   return (
@@ -635,6 +659,26 @@ function NewsManager() {
               <input type="color" value={form.bg_color} onChange={(e) => setForm({ ...form, bg_color: e.target.value })}
                 className="w-full h-10 bg-dark border border-border rounded-lg cursor-pointer" />
             </div>
+            <div>
+  <label className="text-xs text-gray-500 uppercase tracking-wider block mb-1">
+    Cover Image (optional)
+  </label>
+  <div
+    onClick={() => coverRef.current?.click()}
+    className="border border-dashed border-border rounded-lg p-3 text-center cursor-pointer hover:border-gold transition-colors"
+  >
+    {coverFile ? (
+      <div className="flex items-center gap-2 justify-center">
+        <img src={URL.createObjectURL(coverFile)} className="w-10 h-10 rounded object-cover" />
+        <span className="text-xs text-gray-300">{coverFile.name}</span>
+      </div>
+    ) : (
+      <div className="text-xs text-gray-500">📷 Click to add cover image</div>
+    )}
+  </div>
+  <input ref={coverRef} type="file" accept="image/*" className="hidden"
+    onChange={(e) => setCoverFile(e.target.files?.[0] || null)} />
+</div>
             <div>
               <label className="text-xs text-gray-500 uppercase tracking-wider block mb-1">Excerpt</label>
               <input type="text" value={form.excerpt} onChange={(e) => setForm({ ...form, excerpt: e.target.value })}

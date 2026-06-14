@@ -68,6 +68,8 @@ export interface NewsPost {
   tag: string
   excerpt: string
   content: string
+  cover_image?: string
+  cover_image_url?: string
   emoji: string
   bg_color: string
   author_name: string

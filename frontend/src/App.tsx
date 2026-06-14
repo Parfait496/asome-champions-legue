@@ -12,6 +12,8 @@ import AdminPage from './pages/AdminPage'
 import LoginPage from './pages/LoginPage'
 import SubmitPage from './pages/SubmitPage'
 import TeamDetailPage from './pages/TeamDetailPage'
+import NewsDetailPage from './pages/NewsDetailPage'
+import AnnouncementsPage from './pages/AnnouncementsPage'
 
 export default function App() {
   return (
@@ -33,6 +35,8 @@ export default function App() {
               <Route path="/x7k9-admin" element={<AdminPage />} />
               <Route path="/submit" element={<SubmitPage />} />
               <Route path="/teams/:id" element={<TeamDetailPage />} />
+              <Route path="/news/:id" element={<NewsDetailPage />} />
+              <Route path="/announcements" element={<AnnouncementsPage />} />
             </Routes>
           </main>
           <Footer />
