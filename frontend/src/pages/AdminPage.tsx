@@ -974,7 +974,11 @@ function GalleryManager() {
             {item.media_type === 'video' ? (
               <div className="w-full h-full flex items-center justify-center text-4xl">🎥</div>
             ) : (
-              <img src={item.thumbnail || item.file} alt={item.caption} className="w-full h-full object-cover" />
+              <img
+                src={item.thumbnail_url || item.file_url || ''}
+                alt={item.caption}
+                className="w-full h-full object-cover"
+              />
             )}
             <div className="absolute inset-0 bg-dark/70 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2">
               <p className="text-xs text-white text-center px-2">{item.caption}</p>

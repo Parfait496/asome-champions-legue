@@ -5,13 +5,14 @@ import LoadingSpinner from '../components/ui/LoadingSpinner'
 interface MediaItem {
   id: number
   file: string
+  file_url: string | null
   thumbnail: string | null
+  thumbnail_url: string | null
   caption: string
   media_type: 'photo' | 'video'
   matchday: number | null
   created_at: string
 }
-
 export default function GalleryPage() {
   const [items, setItems] = useState<MediaItem[]>([])
   const [loading, setLoading] = useState(true)
@@ -107,15 +108,13 @@ export default function GalleryPage() {
                   <div className="text-xs text-gray-500 px-2 line-clamp-2">{item.caption}</div>
                 </div>
                 <div className="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <div className="w-12 h-12 bg-gold rounded-full flex items-center justify-center text-dark text-xl">
-                    ▶
-                  </div>
+                  <div className="w-12 h-12 bg-gold rounded-full flex items-center justify-center text-dark text-xl">▶</div>
                 </div>
               </div>
             ) : (
               <>
                 <img
-                  src={item.thumbnail || item.file}
+                  src={item.thumbnail_url || item.file_url || ''}
                   alt={item.caption}
                   className="w-full h-full object-cover"
                 />
@@ -141,19 +140,19 @@ export default function GalleryPage() {
             onClick={(e) => e.stopPropagation()}
           >
             {preview.media_type === 'video' ? (
-              <video
-                src={preview.file}
-                controls
-                autoPlay
-                className="w-full rounded-xl max-h-[70vh]"
-              />
-            ) : (
-              <img
-                src={preview.file}
-                alt={preview.caption}
-                className="w-full rounded-xl max-h-[70vh] object-contain"
-              />
-            )}
+  <video
+    src={preview.file_url || ''}
+    controls
+    autoPlay
+    className="w-full rounded-xl max-h-[70vh]"
+  />
+) : (
+  <img
+    src={preview.file_url || ''}
+    alt={preview.caption}
+    className="w-full rounded-xl max-h-[70vh] object-contain"
+  />
+)}
             {preview.caption && (
               <p className="text-center text-gray-300 text-sm mt-4">{preview.caption}</p>
             )}
