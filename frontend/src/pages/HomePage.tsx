@@ -112,6 +112,71 @@ export default function HomePage() {
           </div>
         </div>
       </div>
+      {/* THEME VERSE BANNER */}
+<div className="relative bg-pitch-light overflow-hidden py-12">
+  {/* Background pattern */}
+  <div className="absolute inset-0 opacity-5"
+    style={{
+      backgroundImage: 'radial-gradient(circle, #F5C842 1px, transparent 1px)',
+      backgroundSize: '32px 32px'
+    }}
+  />
+  {/* Gold top border */}
+  <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-gold to-transparent" />
+  {/* Gold bottom border */}
+  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-gold to-transparent" />
+
+  <div className="relative max-w-4xl mx-auto px-4 text-center">
+    {/* Trophy icon */}
+    <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-gold/10 border border-gold/30 text-3xl mb-6">
+      🏆
+    </div>
+
+    {/* Tournament theme label */}
+    <div className="text-xs font-semibold text-gold uppercase tracking-widest mb-4">
+      Tournament Theme
+    </div>
+
+    {/* Verse */}
+    <blockquote className="font-display text-2xl md:text-4xl tracking-wide text-white leading-tight mb-4">
+      "Let us run with perseverance<br className="hidden md:block" />
+      <span className="text-gold"> the race marked out for us."</span>
+    </blockquote>
+
+    {/* Reference */}
+    <cite className="text-gray-400 text-sm not-italic font-medium">
+      — Hebrews 12:1
+    </cite>
+
+    {/* Divider */}
+    <div className="flex items-center gap-4 my-6 max-w-xs mx-auto">
+      <div className="flex-1 h-px bg-border" />
+      <div className="text-gold text-xs">⚽</div>
+      <div className="flex-1 h-px bg-border" />
+    </div>
+
+    {/* Tagline */}
+    <p className="text-gray-400 text-sm max-w-lg mx-auto leading-relaxed">
+      More than a tournament — a celebration of unity, discipline, and the spirit
+      of competition among the students of ASOME.
+    </p>
+
+    {/* Stats row */}
+    <div className="flex items-center justify-center gap-8 mt-8">
+      {[
+        { icon: '🤝', label: 'Unity' },
+        { icon: '💪', label: 'Perseverance' },
+        { icon: '🌟', label: 'Excellence' },
+        { icon: '❤️', label: 'Community' },
+      ].map((v) => (
+        <div key={v.label} className="text-center">
+          <div className="text-2xl mb-1">{v.icon}</div>
+          <div className="text-xs text-gray-500 uppercase tracking-wider">{v.label}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+</div>
 
       {/* ANNOUNCEMENTS BANNER */}
 {announcements.length > 0 && (
