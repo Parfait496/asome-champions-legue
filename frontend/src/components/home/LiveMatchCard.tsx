@@ -3,6 +3,10 @@ import { useNavigate } from 'react-router-dom'
 
 export default function LiveMatchCard({ match }: { match: Match }) {
   const navigate = useNavigate()
+
+  const home = match.home_team
+  const away = match.away_team
+
   return (
     <div
       onClick={() => navigate(`/matches/${match.id}`)}
@@ -18,12 +22,19 @@ export default function LiveMatchCard({ match }: { match: Match }) {
         <div className="flex-1 text-center">
           <div
             className="w-12 h-12 rounded-full flex items-center justify-center text-2xl mx-auto mb-2 border-2"
-            style={{ background: match.home_team.bg_color, borderColor: match.home_team.color + '40' }}
+            style={{
+              background: home ? home.bg_color : '#1A2E28',
+              borderColor: home ? home.color + '40' : '#1E3028',
+            }}
           >
-            {match.home_team.emoji}
+            {home ? home.emoji : '🔲'}
           </div>
-          <div className="text-xs font-semibold text-gray-300">{match.home_team.name}</div>
-          <div className="text-xs text-gray-500">Y{match.home_team.year_group}</div>
+          <div className="text-xs font-semibold text-gray-300">
+            {home ? home.name : (match.home_placeholder || 'TBD')}
+          </div>
+          <div className="text-xs text-gray-500">
+            {home ? `Y${home.year_group}` : ''}
+          </div>
         </div>
         <div className="text-center">
           <div className="font-display text-4xl text-white leading-none">
@@ -36,12 +47,19 @@ export default function LiveMatchCard({ match }: { match: Match }) {
         <div className="flex-1 text-center">
           <div
             className="w-12 h-12 rounded-full flex items-center justify-center text-2xl mx-auto mb-2 border-2"
-            style={{ background: match.away_team.bg_color, borderColor: match.away_team.color + '40' }}
+            style={{
+              background: away ? away.bg_color : '#1A2E28',
+              borderColor: away ? away.color + '40' : '#1E3028',
+            }}
           >
-            {match.away_team.emoji}
+            {away ? away.emoji : '🔲'}
           </div>
-          <div className="text-xs font-semibold text-gray-300">{match.away_team.name}</div>
-          <div className="text-xs text-gray-500">Y{match.away_team.year_group}</div>
+          <div className="text-xs font-semibold text-gray-300">
+            {away ? away.name : (match.away_placeholder || 'TBD')}
+          </div>
+          <div className="text-xs text-gray-500">
+            {away ? `Y${away.year_group}` : ''}
+          </div>
         </div>
       </div>
       {match.events.length > 0 && (
