@@ -12,7 +12,6 @@ api.interceptors.request.use((config) => {
   return config
 })
 
-// Helper — handles both paginated {results:[]} and plain []
 function extractList<T>(data: any): T[] {
   if (Array.isArray(data)) return data
   if (data && Array.isArray(data.results)) return data.results

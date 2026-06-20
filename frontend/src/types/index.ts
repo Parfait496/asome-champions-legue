@@ -16,6 +16,7 @@ export interface Team {
   emoji: string
   color: string
   bg_color: string
+  is_eliminated: boolean
   stats: TeamStats
   players?: Player[]
 }
@@ -26,12 +27,13 @@ export interface Player {
   jersey_number: number
   position: 'GK' | 'DEF' | 'MID' | 'FWD'
   photo?: string
+  photo_url?: string
   is_captain: boolean
   goals: number
   assists: number
   yellow_cards: number
   red_cards: number
-  team?: Team
+  team?: Team | number
 }
 
 export interface MatchEvent {
@@ -45,8 +47,10 @@ export interface MatchEvent {
 
 export interface Match {
   id: number
-  home_team: Team
-  away_team: Team
+  home_team: Team | null
+  away_team: Team | null
+  home_placeholder: string
+  away_placeholder: string
   home_score: number
   away_score: number
   match_date: string
@@ -54,7 +58,7 @@ export interface Match {
   venue: string
   status: 'scheduled' | 'live' | 'done' | 'postponed'
   minute?: number
-  penalty_winner?: Team
+  penalty_winner?: Team | null
   events: MatchEvent[]
 }
 
@@ -69,7 +73,7 @@ export interface NewsPost {
   excerpt: string
   content: string
   cover_image?: string
-  cover_image_url?: string
+  cover_image_url?: string | null
   emoji: string
   bg_color: string
   author_name: string

@@ -8,7 +8,6 @@ import Card from '../components/ui/Card'
 
 const TAG_LABELS: Record<string, string> = {
   match_report: 'Match Report',
-  announcement: 'Announcement',
   player_spotlight: 'Player Spotlight',
   stats: 'Stats',
   general: 'General',
@@ -28,14 +27,13 @@ export default function NewsPage() {
 
   if (loading) return <LoadingSpinner text="Loading news..." />
 
-  const articles = news.filter(n => n.tag !== 'announcement')
-  const filtered = filter === 'all' ? articles : articles.filter(n => n.tag === filter)
+  const articles = news.filter((n) => n.tag !== 'announcement')
+  const filtered = filter === 'all' ? articles : articles.filter((n) => n.tag === filter)
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-10">
       <SectionHeader title="News &" highlight="Updates" />
 
-      {/* Filter tabs */}
       <div className="flex gap-2 flex-wrap mb-6">
         {['all', 'match_report', 'player_spotlight', 'stats', 'general'].map((f) => (
           <button
@@ -52,22 +50,12 @@ export default function NewsPage() {
         ))}
       </div>
 
-      {/* News grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filtered.map((post) => (
-          <Card
-            key={post.id}
-            hover
-            onClick={() => navigate(`/news/${post.id}`)}
-          >
-            {/* Cover */}
+          <Card key={post.id} hover onClick={() => navigate(`/news/${post.id}`)}>
             <div className="h-44 rounded-t-xl overflow-hidden relative">
               {post.cover_image_url ? (
-                <img
-                  src={post.cover_image_url}
-                  alt={post.title}
-                  className="w-full h-full object-cover"
-                />
+                <img src={post.cover_image_url} alt={post.title} className="w-full h-full object-cover" />
               ) : (
                 <div
                   className="w-full h-full flex items-center justify-center text-5xl"
@@ -87,9 +75,7 @@ export default function NewsPage() {
               <p className="text-xs text-gray-500 line-clamp-2 mb-3">{post.excerpt}</p>
               <div className="flex items-center justify-between">
                 <div className="text-xs text-gray-600">
-                  {new Date(post.created_at).toLocaleDateString('en-GB', {
-                    day: 'numeric', month: 'short',
-                  })}
+                  {new Date(post.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
                 </div>
                 <span className="text-xs text-gold">Read more →</span>
               </div>

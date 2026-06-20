@@ -3,14 +3,6 @@ import { useParams, useNavigate, Link } from 'react-router-dom'
 import type { NewsPost } from '../types'
 import LoadingSpinner from '../components/ui/LoadingSpinner'
 
-const TAG_LABELS: Record<string, string> = {
-  match_report: 'Match Report',
-  announcement: 'Announcement',
-  player_spotlight: 'Player Spotlight',
-  stats: 'Stats',
-  general: 'General',
-}
-
 export default function NewsDetailPage() {
   const { id } = useParams()
   const navigate = useNavigate()
@@ -21,23 +13,45 @@ export default function NewsDetailPage() {
   useEffect(() => {
     if (!id) return
     Promise.all([
-      fetch(`${import.meta.env.VITE_API_URL}/news/${id}/`).then(r => r.json()),
-      fetch(`${import.meta.env.VITE_API_URL}/news/`).then(r => r.json()),
+      fetch(`${import.meta.env.VITE_API_URL}/news/${id}/`).then((r) => r.json()),
+      fetch(`${import.meta.env.VITE_API_URL}/news/`).then((r) => r.json()),
     ]).then(([postData, allData]) => {
       setPost(postData)
       const all: NewsPost[] = Array.isArray(allData) ? allData : allData.results || []
-      setRelated(all.filter(p => p.id !== Number(id)).slice(0, 3))
+      setRelated(all.filter((p) => p.id !== Number(id) && p.tag !== 'announcement').slice(0, 3))
       setLoading(false)
     }).catch(() => setLoading(false))
   }, [id])
 
+  useEffect(() => {
+    if (!post) return
+
+    document.title = `${post.title} — ASOME Champions League`
+
+    const setMeta = (property: string, content: string) => {
+      let el = document.querySelector(`meta[property="${property}"]`) as HTMLMetaElement | null
+      if (!el) {
+        el = document.createElement('meta')
+        el.setAttribute('property', property)
+        document.head.appendChild(el)
+      }
+      el.setAttribute('content', content)
+    }
+
+    setMeta('og:title', post.title)
+    setMeta('og:description', post.excerpt)
+    setMeta('og:image', post.cover_image_url || 'https://asome-champions-legue.vercel.app/icon-512.png')
+    setMeta('og:url', window.location.href)
+    setMeta('og:type', 'article')
+
+    return () => {
+      document.title = 'ASOME Champions League'
+    }
+  }, [post])
+
   const handleShare = () => {
     if (navigator.share) {
-      navigator.share({
-        title: post?.title,
-        text: post?.excerpt,
-        url: window.location.href,
-      })
+      navigator.share({ title: post?.title, text: post?.excerpt, url: window.location.href })
     } else {
       navigator.clipboard.writeText(window.location.href)
       alert('Link copied to clipboard!')
@@ -51,7 +65,6 @@ export default function NewsDetailPage() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-10">
-      {/* Back */}
       <div className="flex items-center justify-between mb-8">
         <button
           onClick={() => navigate(-1)}
@@ -68,7 +81,6 @@ export default function NewsDetailPage() {
       </div>
 
       {isAnnouncement ? (
-        /* ── ANNOUNCEMENT STYLE ── */
         <div className="bg-amber-50 border border-amber-200 rounded-2xl overflow-hidden shadow-lg">
           <div className="bg-amber-100 border-b border-amber-200 px-8 py-4 flex items-center justify-between">
             <div>
@@ -102,16 +114,10 @@ export default function NewsDetailPage() {
           </div>
         </div>
       ) : (
-        /* ── NEWS ARTICLE STYLE ── */
         <div>
-          {/* Cover image */}
           {post.cover_image_url ? (
             <div className="rounded-2xl overflow-hidden mb-6 aspect-video">
-              <img
-                src={post.cover_image_url}
-                alt={post.title}
-                className="w-full h-full object-cover"
-              />
+              <img src={post.cover_image_url} alt={post.title} className="w-full h-full object-cover" />
             </div>
           ) : (
             <div
@@ -122,36 +128,31 @@ export default function NewsDetailPage() {
             </div>
           )}
 
-          {/* Tag */}
           <span className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-semibold bg-gold text-dark mb-4">
-            {TAG_LABELS[post.tag] || post.tag}
+            {post.tag.replace('_', ' ')}
           </span>
 
-          {/* Title */}
           <h1 className="font-display text-4xl tracking-wide mb-4 leading-tight">{post.title}</h1>
 
-          {/* Meta */}
           <div className="flex items-center gap-4 text-sm text-gray-500 mb-8 pb-6 border-b border-border">
             <span>✍️ {post.author_name || 'ASOME Staff'}</span>
             <span>·</span>
-            <span>{new Date(post.created_at).toLocaleDateString('en-GB', {
-              day: 'numeric', month: 'long', year: 'numeric',
-            })}</span>
+            <span>
+              {new Date(post.created_at).toLocaleDateString('en-GB', {
+                day: 'numeric', month: 'long', year: 'numeric',
+              })}
+            </span>
           </div>
 
-          {/* Content */}
           <div className="text-gray-300 leading-relaxed whitespace-pre-line text-base">
             {post.content}
           </div>
         </div>
       )}
 
-      {/* Related articles */}
       {related.length > 0 && (
         <div className="mt-12 pt-8 border-t border-border">
-          <h3 className="font-display text-xl tracking-wide mb-4 text-gray-400">
-            More Articles
-          </h3>
+          <h3 className="font-display text-xl tracking-wide mb-4 text-gray-400">More Articles</h3>
           <div className="space-y-3">
             {related.map((r) => (
               <Link
@@ -163,10 +164,7 @@ export default function NewsDetailPage() {
                   className="w-12 h-12 rounded-lg flex items-center justify-center text-2xl flex-shrink-0 overflow-hidden"
                   style={{ background: r.bg_color }}
                 >
-                  {r.cover_image_url
-                    ? <img src={r.cover_image_url} className="w-full h-full object-cover" />
-                    : r.emoji
-                  }
+                  {r.cover_image_url ? <img src={r.cover_image_url} className="w-full h-full object-cover" /> : r.emoji}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="text-sm font-semibold group-hover:text-gold transition-colors truncate">{r.title}</div>

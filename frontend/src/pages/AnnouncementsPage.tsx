@@ -11,8 +11,8 @@ export default function AnnouncementsPage() {
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL}/news/?tag=announcement`)
-      .then(r => r.json())
-      .then(d => {
+      .then((r) => r.json())
+      .then((d) => {
         setAnnouncements(Array.isArray(d) ? d : d.results || [])
         setLoading(false)
       })

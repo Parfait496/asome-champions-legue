@@ -34,6 +34,10 @@ export default function MatchDetailPage() {
   )
 
   const hasScore = match.status === 'done' || match.status === 'live'
+  const homeLabel = match.home_team ? match.home_team.name : (match.home_placeholder || 'À définir')
+  const awayLabel = match.away_team ? match.away_team.name : (match.away_placeholder || 'À définir')
+  const homeEmoji = match.home_team ? match.home_team.emoji : '🔲'
+  const awayEmoji = match.away_team ? match.away_team.emoji : '🔲'
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">
@@ -44,7 +48,6 @@ export default function MatchDetailPage() {
         ← Back to Matches
       </button>
 
-      {/* Match Hero */}
       <div className="relative bg-pitch rounded-2xl p-8 mb-6 overflow-hidden">
         <div className="absolute inset-0 opacity-5"
           style={{ backgroundImage: 'radial-gradient(circle, #4CAF50 1px, transparent 1px)', backgroundSize: '24px 24px' }}
@@ -52,9 +55,11 @@ export default function MatchDetailPage() {
         <div className="relative text-center">
           <div className="flex items-center justify-center gap-8 mb-4">
             <div className="text-center">
-              <div className="text-5xl mb-2">{match.home_team.emoji}</div>
-              <div className="font-display text-xl tracking-wide">{match.home_team.name}</div>
-              <div className="text-xs text-gray-400">Year {match.home_team.year_group}</div>
+              <div className="text-5xl mb-2">{homeEmoji}</div>
+              <div className="font-display text-xl tracking-wide">{homeLabel}</div>
+              <div className="text-xs text-gray-400">
+                {match.home_team ? `Year ${match.home_team.year_group}` : 'TBD'}
+              </div>
             </div>
             <div className="text-center">
               {hasScore ? (
@@ -77,18 +82,24 @@ export default function MatchDetailPage() {
                   </Badge>
                 )}
               </div>
+              {match.penalty_winner && (
+                <div className="text-xs text-gold mt-2 font-medium">
+                  🏆 {match.penalty_winner.name} won on penalties
+                </div>
+              )}
             </div>
             <div className="text-center">
-              <div className="text-5xl mb-2">{match.away_team.emoji}</div>
-              <div className="font-display text-xl tracking-wide">{match.away_team.name}</div>
-              <div className="text-xs text-gray-400">Year {match.away_team.year_group}</div>
+              <div className="text-5xl mb-2">{awayEmoji}</div>
+              <div className="font-display text-xl tracking-wide">{awayLabel}</div>
+              <div className="text-xs text-gray-400">
+                {match.away_team ? `Year ${match.away_team.year_group}` : 'TBD'}
+              </div>
             </div>
           </div>
           <div className="text-xs text-gray-500 mt-2">📍 {match.venue}</div>
         </div>
       </div>
 
-      {/* Events */}
       {match.events.length > 0 && (
         <Card className="p-5 mb-6">
           <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-4">
@@ -109,7 +120,6 @@ export default function MatchDetailPage() {
         </Card>
       )}
 
-      {/* Match Info */}
       <Card className="p-5">
         <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-4">
           Match Info

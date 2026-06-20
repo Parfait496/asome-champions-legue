@@ -13,6 +13,7 @@ interface MediaItem {
   matchday: number | null
   created_at: string
 }
+
 export default function GalleryPage() {
   const [items, setItems] = useState<MediaItem[]>([])
   const [loading, setLoading] = useState(true)
@@ -45,7 +46,6 @@ export default function GalleryPage() {
     <div className="max-w-7xl mx-auto px-4 py-10">
       <SectionHeader title="Match" highlight="Gallery" />
 
-      {/* Filters */}
       <div className="flex gap-2 flex-wrap mb-6">
         <button
           onClick={() => setFilter('all')}
@@ -82,18 +82,16 @@ export default function GalleryPage() {
         ))}
       </div>
 
-      {/* Empty state */}
       {filtered.length === 0 && (
         <div className="text-center py-20">
           <div className="text-5xl mb-4">📸</div>
           <p className="text-gray-500 text-sm">No media uploaded yet.</p>
           <p className="text-gray-600 text-xs mt-1">
-            Waiting for photos and videos.
+            Upload photos and videos through the admin panel.
           </p>
         </div>
       )}
 
-      {/* Grid */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
         {filtered.map((item) => (
           <div
@@ -108,7 +106,9 @@ export default function GalleryPage() {
                   <div className="text-xs text-gray-500 px-2 line-clamp-2">{item.caption}</div>
                 </div>
                 <div className="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <div className="w-12 h-12 bg-gold rounded-full flex items-center justify-center text-dark text-xl">▶</div>
+                  <div className="w-12 h-12 bg-gold rounded-full flex items-center justify-center text-dark text-xl">
+                    ▶
+                  </div>
                 </div>
               </div>
             ) : (
@@ -129,36 +129,30 @@ export default function GalleryPage() {
         ))}
       </div>
 
-      {/* Preview Modal */}
       {preview && (
         <div
           className="fixed inset-0 bg-dark/95 z-50 flex items-center justify-center p-4"
           onClick={() => setPreview(null)}
         >
-          <div
-            className="max-w-3xl w-full"
-            onClick={(e) => e.stopPropagation()}
-          >
+          <div className="max-w-3xl w-full" onClick={(e) => e.stopPropagation()}>
             {preview.media_type === 'video' ? (
-  <video
-    src={preview.file_url || ''}
-    controls
-    autoPlay
-    className="w-full rounded-xl max-h-[70vh]"
-  />
-) : (
-  <img
-    src={preview.file_url || ''}
-    alt={preview.caption}
-    className="w-full rounded-xl max-h-[70vh] object-contain"
-  />
-)}
+              <video
+                src={preview.file_url || ''}
+                controls
+                autoPlay
+                className="w-full rounded-xl max-h-[70vh]"
+              />
+            ) : (
+              <img
+                src={preview.file_url || ''}
+                alt={preview.caption}
+                className="w-full rounded-xl max-h-[70vh] object-contain"
+              />
+            )}
             {preview.caption && (
               <p className="text-center text-gray-300 text-sm mt-4">{preview.caption}</p>
             )}
-            <p className="text-center text-gray-600 text-xs mt-2">
-              Click outside to close
-            </p>
+            <p className="text-center text-gray-600 text-xs mt-2">Click outside to close</p>
           </div>
         </div>
       )}

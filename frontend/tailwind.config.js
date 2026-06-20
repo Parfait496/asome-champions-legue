@@ -5,8 +5,8 @@ export default {
     extend: {
       colors: {
         gold: {
-          DEFAULT: '#F5C842',
-          dark: '#C49A10',
+          DEFAULT: 'var(--color-gold, #F5C842)',
+          dark: 'var(--color-gold-dark, #C49A10)',
         },
         pitch: {
           DEFAULT: '#0D3B2E',
