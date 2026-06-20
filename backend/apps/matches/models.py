@@ -11,11 +11,15 @@ class Match(models.Model):
     ]
 
     home_team = models.ForeignKey(
-        Team, related_name='home_matches', on_delete=models.CASCADE
+        Team, related_name='home_matches', on_delete=models.CASCADE,
+        null=True, blank=True
     )
     away_team = models.ForeignKey(
-        Team, related_name='away_matches', on_delete=models.CASCADE
+        Team, related_name='away_matches', on_delete=models.CASCADE,
+        null=True, blank=True
     )
+    home_placeholder = models.CharField(max_length=100, blank=True, default='')
+    away_placeholder = models.CharField(max_length=100, blank=True, default='')
     home_score = models.IntegerField(default=0)
     away_score = models.IntegerField(default=0)
     match_date = models.DateTimeField()

@@ -5,6 +5,7 @@ class Team(models.Model):
     YEAR_CHOICES = [(i, f'Year {i}') for i in range(1, 7)]
 
     name = models.CharField(max_length=100)
+    is_eliminated = models.BooleanField(default=False)
     year_group = models.IntegerField(choices=YEAR_CHOICES)
     emoji = models.CharField(max_length=10, default='⚽')
     color = models.CharField(max_length=7, default='#F5C842')

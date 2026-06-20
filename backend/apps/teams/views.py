@@ -7,7 +7,7 @@ from .serializers import TeamListSerializer, TeamDetailSerializer, PlayerSeriali
 class TeamViewSet(viewsets.ModelViewSet):
     queryset = Team.objects.prefetch_related('players')
     permission_classes = [IsAuthenticatedOrReadOnly]
-    filterset_fields = ['year_group']
+    filterset_fields = ['year_group', 'is_eliminated']
     search_fields = ['name']
 
     def get_serializer_class(self):

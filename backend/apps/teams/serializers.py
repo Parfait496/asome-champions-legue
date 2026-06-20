@@ -22,7 +22,7 @@ class TeamListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Team
-        fields = ['id', 'name', 'year_group', 'emoji', 'color', 'bg_color', 'stats']
+        fields = ['id', 'name', 'year_group', 'emoji', 'color', 'bg_color', 'is_eliminated', 'stats']
 
 
 class TeamDetailSerializer(serializers.ModelSerializer):
