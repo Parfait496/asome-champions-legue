@@ -50,11 +50,12 @@ export default function NewsDetailPage() {
   }, [post])
 
   const handleShare = () => {
+    const shareUrl = `${window.location.origin}/api/og?id=${post?.id}`
     if (navigator.share) {
-      navigator.share({ title: post?.title, text: post?.excerpt, url: window.location.href })
+      navigator.share({ title: post?.title, text: post?.excerpt, url: shareUrl })
     } else {
-      navigator.clipboard.writeText(window.location.href)
-      alert('Link copied to clipboard!')
+      navigator.clipboard.writeText(shareUrl)
+      alert('Link copied to clipboard! It includes the cover image preview.')
     }
   }
 

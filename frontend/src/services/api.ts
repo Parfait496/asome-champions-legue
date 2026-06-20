@@ -9,6 +9,11 @@ const api = axios.create({
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('access_token')
   if (token) config.headers.Authorization = `Bearer ${token}`
+
+  // Force no-cache on every GET request so edits show immediately
+  if (config.method === 'get') {
+    config.params = { ...config.params, _t: Date.now() }
+  }
   return config
 })
 

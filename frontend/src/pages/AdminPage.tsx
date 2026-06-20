@@ -73,7 +73,8 @@ function LoginScreen() {
 // ── HELPERS ────────────────────────────────────────────
 function apiCall(method: string, url: string, body?: any) {
   const token = localStorage.getItem('access_token')
-  return fetch(`${import.meta.env.VITE_API_URL}${url}`, {
+  const sep = url.includes('?') ? '&' : '?'
+  return fetch(`${import.meta.env.VITE_API_URL}${url}${sep}_t=${Date.now()}`, {
     method,
     headers: {
       'Content-Type': 'application/json',
@@ -81,6 +82,11 @@ function apiCall(method: string, url: string, body?: any) {
     },
     body: body ? JSON.stringify(body) : undefined,
   })
+}
+
+function freshFetch(path: string) {
+  const sep = path.includes('?') ? '&' : '?'
+  return fetch(`${import.meta.env.VITE_API_URL}${path}${sep}_t=${Date.now()}`)
 }
 
 function Message({ text }: { text: string }) {
@@ -102,8 +108,8 @@ function Dashboard() {
       matchesApi.getAll(),
       newsApi.getAll(),
       teamsApi.getAll(),
-      fetch(`${import.meta.env.VITE_API_URL}/players/`).then(r => r.json()),
-      fetch(`${import.meta.env.VITE_API_URL}/matches/top_scorers/`).then(r => r.json()),
+      freshFetch('/players/').then(r => r.json()),
+      freshFetch('/matches/top_scorers/').then(r => r.json()),
     ]).then(([m, n, t, p, s]) => {
       setStats({
         matches: m.count || 0,
@@ -498,7 +504,7 @@ function PlayersManager() {
   })
 
   const load = () => Promise.all([
-    fetch(`${import.meta.env.VITE_API_URL}/players/`).then(r => r.json()),
+    freshFetch('/players/').then(r => r.json()),
     teamsApi.getAll(),
   ]).then(([p, t]) => {
     setPlayers(Array.isArray(p) ? p : p.results || [])
@@ -1028,7 +1034,7 @@ function GalleryManager() {
   const [file, setFile] = useState<File | null>(null)
   const [form, setForm] = useState({ caption: '', matchday: '', media_type: 'photo' })
 
-  const load = () => fetch(`${import.meta.env.VITE_API_URL}/media/`).then(r => r.json())
+  const load = () => freshFetch('/media/').then(r => r.json())
     .then(d => { setItems(Array.isArray(d) ? d : d.results || []); setLoading(false) })
   useEffect(() => { load() }, [])
 
