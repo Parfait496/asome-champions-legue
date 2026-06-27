@@ -10,7 +10,7 @@ from apps.teams.serializers import TeamListSerializer, PlayerSerializer
 
 class MatchViewSet(viewsets.ModelViewSet):
     queryset = Match.objects.select_related(
-        'home_team', 'away_team'
+        'home_team', 'away_team', 'penalty_winner'
     ).prefetch_related('events__player__team')
     serializer_class = MatchSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -24,8 +24,6 @@ class MatchViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def standings(self, request):
-        from apps.teams.models import Team
-        from apps.teams.serializers import TeamListSerializer
         teams = Team.objects.prefetch_related(
             'home_matches__penalty_winner',
             'away_matches__penalty_winner',
@@ -38,7 +36,16 @@ class MatchViewSet(viewsets.ModelViewSet):
                 data.append(entry)
             except Exception:
                 continue
-        data.sort(key=lambda x: (-x['points'], -x['gd'], -x['gf']))
+
+        # Eliminated teams ALWAYS go to the bottom, regardless of points.
+        # Sort key: (eliminated_flag, -points, -gd, -gf)
+        # eliminated_flag: 0 for active teams (sorts first), 1 for eliminated (sorts last)
+        data.sort(key=lambda x: (
+            1 if x['team'].get('is_eliminated') else 0,
+            -x['points'],
+            -x['gd'],
+            -x['gf'],
+        ))
         return Response(data)
 
     @action(detail=False, methods=['get'])
@@ -47,7 +54,7 @@ class MatchViewSet(viewsets.ModelViewSet):
             Player.objects.select_related('team').all(),
             key=lambda p: p.goals,
             reverse=True
-        )[:10]
+        )[:20]
         return Response(PlayerSerializer(players, many=True).data)
 
 
