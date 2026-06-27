@@ -5,6 +5,7 @@ from .models import NewsPost, Submission
 class NewsPostSerializer(serializers.ModelSerializer):
     author_name = serializers.CharField(source='author.username', read_only=True)
     cover_image_url = serializers.SerializerMethodField()
+    is_published = serializers.BooleanField(default=True, required=False)
 
     class Meta:
         model = NewsPost
